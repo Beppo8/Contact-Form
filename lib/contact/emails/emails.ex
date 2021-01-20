@@ -1,7 +1,7 @@
 defmodule Contact.Emails do
   import Bamboo.Email
 
-  def conatct_email(%{"email" => email, "message" => message}) do
+  def contact_email(%{"email" => email, "message" => message}) do
     new_email()
     |> to("beppo2488@gmail.com")
     |> from("beppo2488sm@gmail.com")

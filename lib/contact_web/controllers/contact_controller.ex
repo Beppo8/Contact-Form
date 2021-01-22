@@ -2,9 +2,10 @@ defmodule ContactWeb.ContactController do
   use ContactWeb, :controller
 
   alias Contact.{Mailer, Emails}
-
+  alias Contact.Emails.ContactForm
   def index(conn, _params) do
-    render(conn, "index.html")
+    changeset = ContactForm.changset()
+    render(conn, "index.html", changeset: changeset)
   end
 
   def create(conn, params) do

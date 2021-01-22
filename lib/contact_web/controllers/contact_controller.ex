@@ -1,21 +1,25 @@
 defmodule ContactWeb.ContactController do
   use ContactWeb, :controller
 
-  alias Contact.{Mailer, Emails}
   alias Contact.Emails.ContactForm
   def index(conn, _params) do
-    changeset = ContactForm.changset()
+    changeset = ContactForm.changeset()
     render(conn, "index.html", changeset: changeset)
   end
 
-  def create(conn, params) do
-    params
-    |> Emails.contact_email()
-    |> Mailer.deliver_now()
+  def create(conn, %{"contact_form" => contact_params}) do
+    changeset = ContactForm.changeset(contact_params)
 
-    conn
-    |> put_flash(:info, "Message sent")
-    |> redirect(to: Routes.contact_path(conn, :index))
+    case ContactForm.send(changeset) do
+      {:ok, _contact_form} ->
+        conn
+        |> put_flash(:info, "Message sent")
+        |> redirect(to: Routes.contact_path(conn, :index))
+
+      {:error, changeset} ->
+        render(conn, "index.html", changeset: changeset)
+    end
+
   end
 
 end
